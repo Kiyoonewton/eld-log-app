@@ -1,4 +1,5 @@
 import LocationSelector from "@/components/CityDropdown";
+import EnhancedLocationForm from "@/components/CityDropdown";
 import CityDropdown from "@/components/CityDropdown";
 import Image from "next/image";
 
@@ -22,43 +23,13 @@ export default function Home() {
           <h2 className="text-xl sm:text-2xl font-bold text-center mb-4">
             Plan Your Trip 🚛{" "}
           </h2>
-          <form className="space-y-4">
-            <LocationSelector />
+          <div className="max-w-md mx-auto">
+            {/* Use the enhanced form with autocomplete by default */}
+            <EnhancedLocationForm />
 
-            <div>
-              <label className="block text-sm font-medium">Password</label>
-              <input
-                type="password"
-                className="w-full p-2 border rounded-md"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Select Option</label>
-              <select className="w-full p-2 border rounded-md">
-                <option value="">Choose an option</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Message</label>
-              <textarea
-                className="w-full p-2 border rounded-md"
-                // rows="3"
-                placeholder="Your message"
-              ></textarea>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
-            >
-              Submit
-            </button>
-          </form>
+            {/* Uncomment below and comment out the EnhancedLocationForm to use the basic form */}
+            {/* <LocationForm /> */}
+          </div>{" "}
         </div>
       </div>
     </div>

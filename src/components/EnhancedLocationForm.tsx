@@ -1,22 +1,10 @@
-// EnhancedLocationForm.tsx
+// components/EnhancedLocationForm.tsx
 'use client';
 
 import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
 import { MapPin, Navigation, Truck, ArrowRight, Search } from 'lucide-react';
-
-interface LocationFormData {
-  currentLocation: string;
-  pickupLocation: string;
-  dropoffLocation: string;
-}
-
-type LocationField = keyof LocationFormData;
-
-interface LocationSuggestions {
-  currentLocation: string[];
-  pickupLocation: string[];
-  dropoffLocation: string[];
-}
+import { LocationFormData, LocationField, LocationSuggestions } from '@/types/location';
+import { filterLocations } from '@/data/mockLocationData';
 
 export default function EnhancedLocationForm() {
   const [formData, setFormData] = useState<LocationFormData>({
@@ -49,33 +37,8 @@ export default function EnhancedLocationForm() {
 
     // Simulate API delay
     setTimeout(() => {
-      const locations = [
-        "123 Main Street, New York, NY",
-        "456 Broadway Avenue, Los Angeles, CA",
-        "789 Michigan Avenue, Chicago, IL",
-        "101 Market Street, San Francisco, CA",
-        "202 Peachtree Street, Atlanta, GA",
-        "303 Bourbon Street, New Orleans, LA",
-        "404 Las Vegas Boulevard, Las Vegas, NV",
-        "505 Beale Street, Memphis, TN",
-        "606 Ocean Drive, Miami Beach, FL",
-        "707 Newbury Street, Boston, MA",
-        "808 King Street, Charleston, SC",
-        "909 Pennsylvania Avenue, Washington DC",
-        "1010 Rodeo Drive, Beverly Hills, CA",
-        "1111 Pike Place, Seattle, WA",
-        "1212 Sixth Street, Austin, TX",
-        "1313 Canal Street, New York, NY",
-        "1414 Lombard Street, San Francisco, CA",
-        "1515 Fremont Street, Las Vegas, NV",
-        "1616 Melrose Avenue, Los Angeles, CA",
-        "1717 Royal Street, New Orleans, LA"
-      ];
-      
-      // Filter based on query
-      const mockSuggestions = locations
-        .filter(location => location.toLowerCase().includes(query.toLowerCase()))
-        .slice(0, 5);
+      // Get filtered locations
+      const mockSuggestions = filterLocations(query);
       
       setSuggestions(prev => ({ ...prev, [field]: mockSuggestions }));
     }, 300);
@@ -172,7 +135,9 @@ export default function EnhancedLocationForm() {
   };
 
   return (
-
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Location Details</h2>
+      
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Current Location */}
         <div className="space-y-2">
@@ -323,5 +288,6 @@ export default function EnhancedLocationForm() {
           <ArrowRight className="w-4 h-4" />
         </button>
       </form>
+    </div>
   );
 }
