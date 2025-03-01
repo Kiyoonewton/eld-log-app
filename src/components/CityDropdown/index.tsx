@@ -26,6 +26,7 @@ import { osmGeocodingService } from "@/services/geocodingServices";
 import { getDistanceAndTimeOSRM } from "../CalculateTripDistance/getDistanceAndTimeOSRM";
 import { planStops } from "../CalculateTripDistance/planStops";
 import { useTrip } from "@/context/TripContext";
+import { TripDetails } from "@/context/types";
 
 // Rate limiting helper function to avoid hitting Nominatim's rate limits
 const useDebounce = (value: string, delay: number = 500) => {
@@ -206,6 +207,27 @@ export default function OSMLocationForm() {
     await convertAddressToCoordinates(suggestion, field);
   };
 
+  // async function fetchStops(tripData: TripDetails) {
+  //   // setLoading(true);
+  //   try {
+  //     const res = await fetch("/api/saveTrip", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         tripData,
+  //       }),
+  //     });
+
+  //     if (!res.ok) throw new Error("Failed to fetch stops");
+  //     const data = await res.json();
+  //     setTripDetails(tripData);
+  //   } catch (error) {
+  //     console.error("Error fetching stops:", error);
+  //   } finally {
+  //     // setLoading(false);
+  //   }
+  // }
+
   // Handle "Use My Location" with OpenStreetMap reverse geocoding
   const handleUseMyLocation = async () => {
     setIsLoading(true);
@@ -331,9 +353,25 @@ export default function OSMLocationForm() {
         },
       },
       currentCycleHours: data.currentCycleHours,
+      estimatedDistance: distanceAndDuration?.distance,
+      estimatedDuration: distanceAndDuration?.duration,
     };
 
-    setTripDetails(tripData);
+    // await fetchStops(tripData);
+
+    const res = await fetch("/api/saveTrip", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ trip: tripData }),
+    });
+
+    const trip = await res.json();
+    if (res.ok) {
+      // setTripId(trip.tripId);
+      alert("Trip saved successfully!");
+    } else {
+      alert("Failed to save trip.");
+    }
 
     console.log(
       "Form submitted successfully:",
