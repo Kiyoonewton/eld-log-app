@@ -353,19 +353,23 @@ export default function OSMLocationForm() {
         },
       },
       currentCycleHours: data.currentCycleHours,
-      estimatedDistance: distanceAndDuration?.distance,
-      estimatedDuration: distanceAndDuration?.duration,
+      // estimatedDistance: distanceAndDuration?.distance,
+      // estimatedDuration: distanceAndDuration?.duration,
     };
 
     // await fetchStops(tripData);
 
-    const res = await fetch("/api/saveTrip", {
+    const res = await fetch("/api/suggested-stops", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ trip: tripData }),
     });
 
     const trip = await res.json();
+
+    console.log('====================================');
+    console.log(trip);
+    console.log('====================================');
     if (res.ok) {
       // setTripId(trip.tripId);
       alert("Trip saved successfully!");

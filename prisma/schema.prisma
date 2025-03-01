@@ -14,12 +14,23 @@ datasource db {
 }
 
 model Trip {
-  id              String  @id @default(uuid())
-  currentLocation String
-  pickupLocation  String
-  dropoffLocation String
+  id                String   @id @default(uuid())
+  currentLocation   String
+  pickupLocation    String
+  dropoffLocation   String
   currentCycleHours Int
-  estimatedDuration String
-  estimatedDistance String
-  createdAt       DateTime @default(now())
+  estimatedDistance Float
+  estimatedDuration Float
+  stops             Stop[]   @relation("TripStops") // ✅ Remove `references`
 }
+
+model Stop {
+  id        String  @id @default(uuid())
+  name      String
+  latitude  Float
+  longitude Float
+  type      String
+  tripId    String
+  trip      Trip    @relation("TripStops", fields: [tripId], references: [id]) // ✅ Define fields & references here
+}
+

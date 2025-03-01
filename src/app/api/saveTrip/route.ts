@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db"; // PostgreSQL database connection
+import { fetchRoute } from "@/lib/osm";
+import { Location } from "@/context/types";
+import { selectedStops } from "./helper";
 
 export async function POST(req: Request) {
   try {
@@ -9,11 +12,30 @@ export async function POST(req: Request) {
     //     return NextResponse.json({ error: "Invalid input data" }, { status: 400 });
     // }
 
-    // console.log("====================================");
-    // console.log(trip);
-    // console.log("====================================");
-
     // Save trip details in the database
+    const {
+      currentLocation,
+      pickupLocation,
+      dropoffLocation,
+    }: {
+      currentLocation: Location;
+      pickupLocation: Location;
+      dropoffLocation: Location;
+    } = trip;
+
+    if (!currentLocation || !pickupLocation || !dropoffLocation) {
+      return NextResponse.json(
+        { error: "Missing required locations" },
+        { status: 400 }
+      );
+    }
+
+    const stopsData = await selectedStops(
+      currentLocation,
+      pickupLocation,
+      dropoffLocation
+    );
+
     const savedTrip = await prisma.trip.create({
       data: {
         currentLocation: trip.currentLocation.address,
@@ -22,27 +44,25 @@ export async function POST(req: Request) {
         currentCycleHours: trip.currentCycleHours,
         estimatedDistance: trip.estimatedDistance,
         estimatedDuration: trip.estimatedDuration,
-        // stops: {
-        //     create: selectedStops.map((stop: any) => ({
-        //         name: stop.name,
-        //         latitude: stop.latitude,
-        //         longitude: stop.longitude,
-        //         type: stop.type, // e.g., "rest", "fuel"
-        //     })),
-        // },
+        stops: {
+          create: stopsData?.stops?.length
+            ? stopsData.stops.map((stop: any) => ({
+                name: stop.name,
+                latitude: stop.latitude,
+                longitude: stop.longitude,
+                type: stop.type,
+              }))
+            : [],
+        },
       },
-      // include: { stops: true }, // Include stops in the response
+      include: { stops: true },
     });
-
-    console.log('====================================');
-    console.log(savedTrip);
-    console.log('====================================');
 
     return NextResponse.json({ tripId: savedTrip.id }, { status: 201 });
   } catch (error) {
-    console.error("Error saving trip:", error);
+    // console.log("Error saving trip:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error},
       { status: 500 }
     );
   }
