@@ -1,100 +1,78 @@
-import { geodesicDistance } from "@/utils/distance";
-import fetch from "node-fetch"; // Required for API requests
+// pages/api/route.ts
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { TripData, OSRMRouteResponse, CombinedRoute, RouteWithStops } from '../../types';
+import { calculateRoute } from '../../lib/routeCalculator';
 
-// Define types for locations
-type Coordinates = { latitude: number; longitude: number };
-type Location = { address: string; coordinates: Coordinates };
-type Stop = { name: string; coordinates: Coordinates; reason: string };
+type ResponseData = RouteWithStops | { message: string; error?: string };
 
-export async function POST(req: Request) {
-    try {
-        const body = await req.json();
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseData>
+) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
-        const { currentLocation, pickupLocation, dropoffLocation, currentCycleHours } = body.trip as {
-            currentLocation: Location;
-            pickupLocation: Location;
-            dropoffLocation: Location;
-            currentCycleHours: number;
-        };
+  try {
+    const { 
+      currentLocation, 
+      pickupLocation, 
+      dropoffLocation, 
+      currentCycleUsed 
+    } = req.body as TripData;
 
-        // Calculate distances
-        const distanceToPickup = geodesicDistance(currentLocation.coordinates, pickupLocation.coordinates);
-        const distanceToDropoff = geodesicDistance(pickupLocation.coordinates, dropoffLocation.coordinates);
-        const totalDistance = distanceToPickup + distanceToDropoff;
-
-        let stops: Stop[] = [];
-
-        // Get stops for the entire route (current → pickup → dropoff)
-        const restStops = await getRestStopsAlongRoute(currentLocation.coordinates, dropoffLocation.coordinates);
-        const fuelStops = await getFuelStationsAlongRoute(currentLocation.coordinates, dropoffLocation.coordinates);
-
-        console.log('====================================');
-        console.log(totalDistance);
-        console.log('====================================');
-        // Add a mandatory rest stop if driver has been driving for 8+ hours
-        if (currentCycleHours >= 8 && restStops.length > 0) {
-            stops.push({
-                name: restStops[0].name, // Closest rest stop
-                coordinates: restStops[0].coordinates,
-                reason: "Required after 8 hours of driving",
-            });
-        }
-
-        // Add a fuel stop if total distance is greater than 1000 miles
-        if (totalDistance > 500 && fuelStops.length > 0) {
-            stops.push({
-                name: fuelStops[0].name, // Closest fuel station
-                coordinates: fuelStops[0].coordinates,
-                reason: "Fuel stop every 500 miles",
-            });
-        }
-
-        return Response.json({ stops }, { status: 200 });
-    } catch (error) {
-        console.error("Error processing suggested stops:", error);
-        return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    // First get route from current to pickup
+    const pickupRouteRes = await fetch(
+      `https://router.project-osrm.org/route/v1/driving/${currentLocation.lng},${currentLocation.lat};${pickupLocation.lng},${pickupLocation.lat}?overview=full&geometries=geojson`
+    );
+    const pickupRouteData = await pickupRouteRes.json() as OSRMRouteResponse;
+    
+    if (pickupRouteData.code !== 'Ok') {
+      throw new Error(`OSRM error for pickup route: ${pickupRouteData.message || 'Unknown error'}`);
     }
-}
-
-// Function to fetch rest stops **along the full route**
-async function getRestStopsAlongRoute(start: Coordinates, end: Coordinates): Promise<Stop[]> {
-    const overpassQuery = `
-        [out:json];
-        (
-            node["amenity"="rest_area"](around:50000,${start.latitude},${start.longitude});
-            node["amenity"="rest_area"](around:50000,${end.latitude},${end.longitude});
-        );
-        out body;
-    `;
-    return fetchOverpassData(overpassQuery);
-}
-
-// Function to fetch fuel stations **along the full route**
-async function getFuelStationsAlongRoute(start: Coordinates, end: Coordinates): Promise<Stop[]> {
-    const overpassQuery = `
-        [out:json];
-        (
-            node["amenity"="fuel"](around:50000,${start.latitude},${start.longitude});
-            node["amenity"="fuel"](around:50000,${end.latitude},${end.longitude});
-        );
-        out body;
-    `;
-    return fetchOverpassData(overpassQuery);
-}
-
-// Generic function to query OpenStreetMap Overpass API
-async function fetchOverpassData(query: string): Promise<Stop[]> {
-    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
-    const response = await fetch(url);
-    if (!response.ok) {
-        console.error("Error fetching Overpass data:", response.statusText);
-        return [];
+    
+    // Then get route from pickup to dropoff
+    const dropoffRouteRes = await fetch(
+      `https://router.project-osrm.org/route/v1/driving/${pickupLocation.lng},${pickupLocation.lat};${dropoffLocation.lng},${dropoffLocation.lat}?overview=full&geometries=geojson`
+    );
+    const dropoffRouteData = await dropoffRouteRes.json() as OSRMRouteResponse;
+    
+    if (dropoffRouteData.code !== 'Ok') {
+      throw new Error(`OSRM error for dropoff route: ${dropoffRouteData.message || 'Unknown error'}`);
     }
+    
+    // Combine routes and process
+    const combinedRoute = combineRoutes(pickupRouteData, dropoffRouteData);
+    
+    // Add required stops based on HOS rules
+    const routeWithStops = calculateRoute(
+      combinedRoute, 
+      currentCycleUsed, 
+      currentLocation,
+      pickupLocation,
+      dropoffLocation
+    );
+    
+    return res.status(200).json(routeWithStops);
+  } catch (error) {
+    console.error('Route calculation error:', error);
+    return res.status(500).json({ 
+      message: 'Error calculating route', 
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+}
 
-    const data = await response.json() as any;
-    return data.elements.map((el: any) => ({
-        name: el.tags?.name || "Unknown",
-        coordinates: { latitude: el.lat, longitude: el.lon },
-        reason: "Suggested stop along the route",
-    }));
+function combineRoutes(route1: OSRMRouteResponse, route2: OSRMRouteResponse): CombinedRoute {
+  // Combine two route segments, removing duplicate connecting point
+  return {
+    distance: route1.routes[0].distance/1000 * 0.621371 + route2.routes[0].distance/1000 * 0.621371, // Convert m to miles
+    duration: route1.routes[0].duration + route2.routes[0].duration, // seconds
+    coordinates: [
+      ...route1.routes[0].geometry.coordinates,
+      ...route2.routes[0].geometry.coordinates.slice(1)
+    ] as [number, number][],
+    pickup_coordinates: route1.routes[0].geometry.coordinates[route1.routes[0].geometry.coordinates.length - 1] as [number, number],
+    dropoff_coordinates: route2.routes[0].geometry.coordinates[route2.routes[0].geometry.coordinates.length - 1] as [number, number]
+  };
 }
