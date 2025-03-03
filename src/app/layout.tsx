@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
+      <body style={{background:"#fff"}}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <TripProvider>{children}</TripProvider>

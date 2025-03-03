@@ -60,7 +60,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ tripId: savedTrip.id }, { status: 201 });
   } catch (error) {
-    // console.log("Error saving trip:", error);
     return NextResponse.json(
       { error},
       { status: 500 }

@@ -35,10 +35,3 @@ export async function getDistanceAndTimeOSRM(
     }
 }
 
-// Example Usage
-// const currentLocation = { latitude: 6.4669982, longitude: 3.5896566 };
-// const pickupLocation = { latitude: 6.4711251, longitude: 3.8147504 };
-// const dropoffLocation = { latitude: 6.5848212, longitude: 3.3329165 };
-
-// getDistanceAndTimeOSRM(currentLocation, pickupLocation, dropoffLocation)
-//     .then(console.log);

@@ -27,6 +27,7 @@ import { getDistanceAndTimeOSRM } from "../CalculateTripDistance/getDistanceAndT
 import { planStops } from "../CalculateTripDistance/planStops";
 import { useTrip } from "@/context/TripContext";
 import { TripDetails } from "@/context/types";
+import { TripData } from "@/app/types";
 
 // Rate limiting helper function to avoid hitting Nominatim's rate limits
 const useDebounce = (value: string, delay: number = 500) => {
@@ -50,7 +51,11 @@ const MAX_DAILY_HOURS = 14; // Maximum hours allowed in a day
 const MAX_DRIVING_HOURS = 11; // Maximum driving hours allowed
 const MAX_CYCLE_HOURS = 70; // Maximum hours in 8-day cycle (70-hour rule)
 
-export default function OSMLocationForm() {
+export default function OSMLocationForm({
+  onCalculate,
+}: {
+  onCalculate: (data: TripData) => void;
+}) {
   // React Hook Form with Zod integration
   const {
     control,
@@ -248,8 +253,6 @@ export default function OSMLocationForm() {
               address: locationData.address,
               coordinates: coordinates,
             });
-
-            console.log("Location data from coordinates:", locationData);
           } catch (error) {
             console.error("Error getting location:", error);
           } finally {
@@ -353,9 +356,28 @@ export default function OSMLocationForm() {
         },
       },
       currentCycleHours: data.currentCycleHours,
+
       // estimatedDistance: distanceAndDuration?.distance,
       // estimatedDuration: distanceAndDuration?.duration,
     };
+
+    const tripdata: TripData = {
+      currentLocation: {
+        lat: Number(data.currentLocation.coordinates?.latitude.toFixed(6)),
+        lng: Number(data.currentLocation.coordinates?.longitude.toFixed(6)),
+      },
+      pickupLocation: {
+        lat: Number(data.pickupLocation.coordinates?.latitude.toFixed(6)),
+        lng: Number(data.pickupLocation.coordinates?.longitude.toFixed(6)),
+      },
+      dropoffLocation: {
+        lat: Number(data.dropoffLocation.coordinates?.latitude.toFixed(6)),
+        lng: Number(data.dropoffLocation.coordinates?.longitude.toFixed(6)),
+      },
+      currentCycleUsed: data.currentCycleHours,
+    };
+
+    onCalculate(tripdata);
 
     // await fetchStops(tripData);
 
@@ -367,9 +389,6 @@ export default function OSMLocationForm() {
 
     const trip = await res.json();
 
-    console.log('====================================');
-    console.log(trip);
-    console.log('====================================');
     if (res.ok) {
       // setTripId(trip.tripId);
       alert("Trip saved successfully!");
@@ -377,14 +396,6 @@ export default function OSMLocationForm() {
       alert("Failed to save trip.");
     }
 
-    console.log(
-      "Form submitted successfully:",
-      planStops({
-        totalDistance: Number(distanceAndDuration?.distance),
-        totalDuration: Number(distanceAndDuration?.duration),
-        currentCycleHours: Number(data.currentCycleHours),
-      })
-    );
     // Format data for display in alert
     // const alertMessage = `
     //   Form submitted successfully!

@@ -28,9 +28,6 @@ export async function POST(req: Request) {
         const restStops = await getRestStopsAlongRoute(currentLocation.coordinates, dropoffLocation.coordinates);
         const fuelStops = await getFuelStationsAlongRoute(currentLocation.coordinates, dropoffLocation.coordinates);
 
-        console.log('====================================');
-        console.log(totalDistance);
-        console.log('====================================');
         // Add a mandatory rest stop if driver has been driving for 8+ hours
         if (currentCycleHours >= 8 && restStops.length > 0) {
             stops.push({

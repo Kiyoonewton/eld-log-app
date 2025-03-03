@@ -6,7 +6,7 @@ import {
   RouteWithStops,
   DailyLogSheet,
   ELDLogEntry,
-} from "../types";
+} from "@/app/types";
 
 export function calculateRoute(
   routeData: CombinedRoute,

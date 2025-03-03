@@ -5,9 +5,6 @@ export const getAddressFromCoords = async (lat: number, lng: number) => {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    console.log('====================================');
-    console.log(data);
-    console.log('====================================');
     if (data.status === "OK") {
       return data.results[0].formatted_address;
     } else {
