@@ -1,3 +1,5 @@
+import { Stop } from "@/app/types";
+
 export interface Coordinates {
   latitude: number;
   longitude: number;
@@ -13,6 +15,8 @@ export interface TripDetails {
   pickupLocation: Location | null;
   dropoffLocation: Location | null;
   currentCycleHours: number;
+  onDutyHoursToday: number;
+  stops: Stop[];
 }
 
 export interface TripContextType extends TripDetails {

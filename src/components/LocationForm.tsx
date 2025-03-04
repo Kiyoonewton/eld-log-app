@@ -53,7 +53,7 @@ export default function LocationForm() {
         }
       );
     } else {
-      alert("Geolocation is not supported by your browser");
+      // alert("Geolocation is not supported by your browser");
       setIsLoading(false);
     }
   };

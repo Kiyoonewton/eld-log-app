@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
 import { TripContextType, TripDetails } from "./types";
@@ -11,6 +11,8 @@ export function TripProvider({ children }: { children: ReactNode }) {
     pickupLocation: null,
     dropoffLocation: null,
     currentCycleHours: 0,
+    onDutyHoursToday: 0,
+    stops:[]
   });
 
   return (

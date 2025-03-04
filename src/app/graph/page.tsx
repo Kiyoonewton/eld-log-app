@@ -1,23 +1,40 @@
 "use client";
 import GraphComponent from "@/components/GraphComponent";
 // import GraphGrid from '@/components/GraphComponent'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { graphData } from "./data";
 import ShippingRemarksForm from "@/components/ShippingRemarksForm";
-import { ShippingFormData } from "@/components/ShippingRemarksForm/types";
+import DriverHoursGrid from "@/components/DriverHoursGrid";
+import DriverLogDisplay from "@/components/DriverLogData";
+import { useTrip } from "@/context/TripContext";
+import { transformTripData } from "@/utils/transformTripData";
+import { GraphData, TripData } from "@/types/transformData";
 
 const page = () => {
   const initialData = {
     documentNumber: "BOL12345",
     shipperCommodity: "ABC Shipping Co. - Electronics",
     remarks: "we are good",
+    licensePlate: "ABC-1234 (NY)",
+    totalMilesDrivingToday: "450 miles",
+    totalMileageToday: "520 miles",
+    carrierName: "John Doe",
+    officeAddress: "1234 Business Rd, Suite 100  Dallas, TX 75201",
+    homeAddress: "5678 Industrial Ave Houston, TX 77001",
   };
+  const today = new Date();
+  // const [graphData, setGraphData] = useState<GraphDataProps | null>(null);
+  const { stops, currentLocation, dropoffLocation } = useTrip();
 
-  const handleSubmit = (data: ShippingFormData) => {
-    console.log("Form submitted:", data);
-    // Here you would typically save the data to your backend
-    // e.g., using fetch or axios
-  };
+  async function getGraphData(tripData: TripData[]): Promise<GraphData> {
+    return await transformTripData(tripData);
+  }
+  useEffect(() => {
+    const graphData: Promise<GraphData> = getGraphData(stops);
+    // setGraphData(graphData as any);
+    console.log(graphData);
+  });
+
   return (
     <main style={{ width: "100%", maxWidth: "70%", margin: "80px auto" }}>
       <div className="flex justify-between">
@@ -32,7 +49,7 @@ const page = () => {
                 className="weight font-extrabold text-blue-500"
                 style={{ borderBottom: "2px solid black", paddingRight: "5px" }}
               >
-                February
+                {today.toLocaleString("en-US", { month: "long" })}
               </p>
               <p className="text-center">(month)</p>
             </span>
@@ -46,7 +63,7 @@ const page = () => {
                   padding: "0 10px",
                 }}
               >
-                10
+                {today.getDate()}
               </p>
               <p className="text-center">(day)</p>
             </span>
@@ -56,7 +73,7 @@ const page = () => {
                 className="weight font-extrabold text-blue-500"
                 style={{ borderBottom: "2px solid black", textAlign: "center" }}
               >
-                2025
+                {today.getFullYear()}
               </h1>
               <p className="text-center">(year)</p>
             </span>
@@ -98,7 +115,7 @@ const page = () => {
               margin: "auto",
             }}
           >
-            Current Location
+            {dropoffLocation?.address || ""}
           </p>
         </span>
         <span
@@ -118,34 +135,28 @@ const page = () => {
               margin: "auto",
             }}
           >
-            DropOff Location
+            {currentLocation?.address || ""}
           </p>
         </span>
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 10,
-          justifyContent: "center",
-          fontSize: 16,
-          paddingTop: "10px",
-          fontWeight: "700",
-        }}
-      >
-        <span>
-          <p style={{ border: "2px solid", textAlign: "center" }}></p>
-          Total miles driving today
-        </span>
-        <span style={{ border: "2px solid", textAlign: "center" }}>
-          Total milage today
-        </span>
-      </div>
-      <GraphComponent graphData={graphData} />
+      <DriverLogDisplay initialData={initialData} />
+      {graphData && <GraphComponent graphData={graphData} />}
 
-      <ShippingRemarksForm
-        onSubmit={handleSubmit}
-        initialData={initialData}
-        className="mb-8 mt-20"
+      <ShippingRemarksForm initialData={initialData} className="mb-8 mt-20" />
+      <DriverHoursGrid
+        driversData={{
+          eightDayRule: {
+            hoursOn7Days: 45.5,
+            hoursAvailableTomorrow: 24.5,
+            hoursOn5Days: 32.0,
+          },
+          sevenDayRule: {
+            hoursOn8Days: 48.5,
+            hoursAvailableTomorrow: 11.5,
+            hoursOn7Days: 45.5,
+          },
+          hoursAvailable: 70,
+        }}
       />
     </main>
   );

@@ -28,7 +28,7 @@ const TripForm: React.FC<TripFormProps> = ({ onCalculate, isLoading }) => {
     const dropoffCoords = await geocodeLocation(dropoffLocationQuery);
     
     if (!currentCoords || !pickupCoords || !dropoffCoords) {
-      alert('Unable to geocode one or more locations. Please try again.');
+      // alert('Unable to geocode one or more locations. Please try again.');
       return;
     }
     
@@ -54,7 +54,7 @@ const TripForm: React.FC<TripFormProps> = ({ onCalculate, isLoading }) => {
       const data = await response.json();
       
       if (data.length === 0) {
-        alert(`Location not found: ${query}`);
+        // alert(`Location not found: ${query}`);
         return null;
       }
       

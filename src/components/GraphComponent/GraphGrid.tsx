@@ -1,8 +1,14 @@
 "use client";
 import React, { useMemo } from "react";
 import { GraphDataProps } from "./types";
+import { useTrip } from "@/context/TripContext";
+import { TripDetails } from "@/context/types";
+
+// Define a type for valid status values
+type DutyStatus = "off-duty" | "sleeper-berth" | "driving" | "on-duty";
 
 const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
+  const { setTripDetails } = useTrip();
   // SVG dimensions and grid layout
   const svgWidth = 1200;
   const svgHeight = 320;
@@ -18,7 +24,7 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
   const timeToX = (time: number) => leftMargin + time * hourWidth;
 
   // Map statuses to Y positions (center of row)
-  const statusToY: Record<string, number> = {
+  const statusToY: Record<DutyStatus, number> = {
     "off-duty": headerHeight + rowHeight / 2,
     "sleeper-berth": headerHeight + rowHeight + rowHeight / 2,
     driving: headerHeight + 2 * rowHeight + rowHeight / 2,
@@ -30,8 +36,13 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
     // Sort the status entries by time
     const sortedStatuses = [...dutyStatuses].sort((a, b) => a.time - b.time);
 
-    const segs = [];
-    const trans = [];
+    const segs: { status: DutyStatus; startTime: number; endTime: number }[] =
+      [];
+    const trans: {
+      fromStatus: DutyStatus;
+      toStatus: DutyStatus;
+      time: number;
+    }[] = [];
 
     // Process each pair of consecutive status entries
     for (let i = 0; i < sortedStatuses.length - 1; i++) {
@@ -41,7 +52,7 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
       if (currentEntry.status) {
         // Add a segment from current time to next time
         segs.push({
-          status: currentEntry.status,
+          status: currentEntry.status as DutyStatus,
           startTime: currentEntry.time,
           endTime: nextEntry.time,
         });
@@ -49,8 +60,8 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
         // Add a transition if the status changes
         if (nextEntry.status && currentEntry.status !== nextEntry.status) {
           trans.push({
-            fromStatus: currentEntry.status,
-            toStatus: nextEntry.status,
+            fromStatus: currentEntry.status as DutyStatus,
+            toStatus: nextEntry.status as DutyStatus,
             time: nextEntry.time,
           });
         }
@@ -61,7 +72,7 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
     const lastEntry = sortedStatuses[sortedStatuses.length - 1];
     if (lastEntry.status && lastEntry.time < 24) {
       segs.push({
-        status: lastEntry.status,
+        status: lastEntry.status as DutyStatus,
         startTime: lastEntry.time,
         endTime: 24,
       });
@@ -70,12 +81,27 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
     return { segments: segs, transitions: trans };
   }, [dutyStatuses]);
 
-  // Format time as HH:MM
-  // const formatTime = (time: number) => {
-  //   const hours = Math.floor(time);
-  //   const minutes = Math.round((time - hours) * 60);
-  //   return `${hours}:${minutes.toString().padStart(2, '0')}`;
-  // };
+  const totalHours = useMemo(() => {
+    const hours: Record<DutyStatus, number> = {
+      "off-duty": 0,
+      "sleeper-berth": 0,
+      driving: 0,
+      "on-duty": 0,
+    };
+
+    segments.forEach((segment) => {
+      const duration = segment.endTime - segment.startTime;
+      hours[segment.status] += duration;
+    });
+    const total = Object.values(hours).reduce((sum, value) => sum + value, 0);
+    //@ts-ignore
+    setTripDetails((prev:TripDetails) => ({
+      ...prev as TripDetails,
+      onDutyHoursToday: hours.driving + hours["on-duty"],
+    }));
+    
+    return { ...hours, total };
+  }, [segments]);
 
   return (
     <div className="eld-graph-container">
@@ -322,7 +348,7 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
         {segments.map((segment, index) => {
           const startX = timeToX(segment.startTime);
           const endX = timeToX(segment.endTime);
-          const y = statusToY[segment.status as keyof typeof statusToY];
+          const y = statusToY[segment.status];
 
           return (
             <line
@@ -340,8 +366,8 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
         {/* Transitions (vertical blue lines) */}
         {transitions.map((transition, index) => {
           const x = timeToX(transition.time);
-          const y1 = statusToY[transition.fromStatus as keyof typeof statusToY];
-          const y2 = statusToY[transition.toStatus as keyof typeof statusToY];
+          const y1 = statusToY[transition.fromStatus];
+          const y2 = statusToY[transition.toStatus];
 
           return (
             <line
@@ -379,6 +405,63 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
             </g>
           );
         })}
+
+        {/* Total Hours for each status */}
+        <text
+          x={svgWidth - rightMargin / 2}
+          y={headerHeight + rowHeight / 2}
+          textAnchor="middle"
+          fill="#0078d4"
+          fontWeight="bold"
+          fontSize="14"
+          dominantBaseline="middle"
+        >
+          {totalHours["off-duty"].toFixed(1)}
+        </text>
+        <text
+          x={svgWidth - rightMargin / 2}
+          y={headerHeight + rowHeight + rowHeight / 2}
+          textAnchor="middle"
+          fill="#0078d4"
+          fontWeight="bold"
+          fontSize="14"
+          dominantBaseline="middle"
+        >
+          {totalHours["sleeper-berth"].toFixed(1)}
+        </text>
+        <text
+          x={svgWidth - rightMargin / 2}
+          y={headerHeight + 2 * rowHeight + rowHeight / 2}
+          textAnchor="middle"
+          fill="#0078d4"
+          fontWeight="bold"
+          fontSize="14"
+          dominantBaseline="middle"
+        >
+          {totalHours["driving"].toFixed(1)}
+        </text>
+        <text
+          x={svgWidth - rightMargin / 2}
+          y={headerHeight + 3 * rowHeight + rowHeight / 2}
+          textAnchor="middle"
+          fill="#0078d4"
+          fontWeight="bold"
+          fontSize="14"
+          dominantBaseline="middle"
+        >
+          {totalHours["on-duty"].toFixed(1)}
+        </text>
+        <text
+          x={svgWidth - rightMargin / 2}
+          y={headerHeight + 4 * rowHeight + rowHeight / 2}
+          textAnchor="middle"
+          fill="#0078d4"
+          fontWeight="bold"
+          fontSize="14"
+          dominantBaseline="middle"
+        >
+          {totalHours.total.toFixed(1)}
+        </text>
       </svg>
 
       <style jsx>{`

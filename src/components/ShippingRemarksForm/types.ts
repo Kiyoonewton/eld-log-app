@@ -17,8 +17,6 @@ export interface ShippingFormData {
   
   // Form props type
   export interface ShippingFormProps {
-    onSubmit?: (data: ShippingFormData) => void;
     initialData?: Partial<ShippingFormData>;
     className?: string;
-    readOnly?: boolean;
   }

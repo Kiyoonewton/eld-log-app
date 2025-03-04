@@ -24,9 +24,7 @@ import {
 // Import the OpenStreetMap geocoding service
 import { osmGeocodingService } from "@/services/geocodingServices";
 import { getDistanceAndTimeOSRM } from "../CalculateTripDistance/getDistanceAndTimeOSRM";
-import { planStops } from "../CalculateTripDistance/planStops";
 import { useTrip } from "@/context/TripContext";
-import { TripDetails } from "@/context/types";
 import { TripData } from "@/app/types";
 
 // Rate limiting helper function to avoid hitting Nominatim's rate limits
@@ -279,11 +277,11 @@ export default function OSMLocationForm({
               break;
           }
 
-          alert(errorMessage);
+          // alert(errorMessage);
         }
       );
     } else {
-      alert("Geolocation is not supported by your browser");
+      // alert("Geolocation is not supported by your browser");
       setIsLoading(false);
     }
   };
@@ -391,9 +389,9 @@ export default function OSMLocationForm({
 
     if (res.ok) {
       // setTripId(trip.tripId);
-      alert("Trip saved successfully!");
+      // alert("Trip saved successfully!");
     } else {
-      alert("Failed to save trip.");
+      // alert("Failed to save trip.");
     }
 
     // Format data for display in alert

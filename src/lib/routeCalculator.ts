@@ -7,6 +7,7 @@ import {
   DailyLogSheet,
   ELDLogEntry,
 } from "@/app/types";
+import { sortStopsByArrival } from "@/utils/sortStopsBydate";
 
 export function calculateRoute(
   routeData: CombinedRoute,
@@ -138,7 +139,7 @@ export function calculateRoute(
 
   return {
     coordinates: routeData.coordinates,
-    stops: stops,
+    stops: sortStopsByArrival(stops),
     totalDistance: totalDistance,
     totalDuration: totalDuration,
     eldLogs: generateEldLogs(stops, totalDistance, totalDuration),

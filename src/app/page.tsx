@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import { TripData, RouteWithStops } from "./types";
-import EldLogDisplay from "@/components/EldLogDisplay";
 import RouteMap from "@/components/RouteMap";
 import OSMLocationForm from "@/components/CityDropdown";
+import { useTrip } from "@/context/TripContext";
 
 const LoadingComponent = React.lazy(
   () => import("../components/LoadingComponent")
@@ -15,6 +15,8 @@ export default function Home() {
   const [routeData, setRouteData] = useState<RouteWithStops | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { setTripDetails } = useTrip();
 
   const calculateRoute = async (tripData: TripData) => {
     setLoading(true);
@@ -33,6 +35,8 @@ export default function Home() {
 
       const data = (await response.json()) as RouteWithStops;
       setRouteData(data);
+      //@ts-ignore
+      setTripDetails((prev) => ({ ...prev, stops: data?.stops }));
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
@@ -196,9 +200,9 @@ export default function Home() {
                   </div>
                 </div>
 
-                {routeData.eldLogs && (
+                {/* {routeData.eldLogs && (
                   <EldLogDisplay logs={routeData.eldLogs} />
-                )}
+                )} */}
               </div>
             )}
           </div>
