@@ -1,4 +1,4 @@
-import { Stop } from "@/app/types";
+import { DailyLogSheet, Stop, TripDetailsProps } from "@/app/types";
 
 export interface Coordinates {
   latitude: number;
@@ -17,6 +17,7 @@ export interface TripDetails {
   currentCycleHours: number;
   onDutyHoursToday: number;
   stops: Stop[];
+  eldLogs: DailyLogSheet[];
 }
 
 export interface TripContextType extends TripDetails {

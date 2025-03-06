@@ -12,7 +12,8 @@ export function TripProvider({ children }: { children: ReactNode }) {
     dropoffLocation: null,
     currentCycleHours: 0,
     onDutyHoursToday: 0,
-    stops:[]
+    stops: [],
+    eldLogs: [],
   });
 
   return (

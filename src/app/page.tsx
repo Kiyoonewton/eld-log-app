@@ -7,7 +7,8 @@ import RouteMap from "@/components/RouteMap";
 import OSMLocationForm from "@/components/CityDropdown";
 import { useTrip } from "@/context/TripContext";
 import { useRouter } from "next/navigation";
-import GraphPage from "./graph/Page";
+import GraphPage from "./graph/page";
+import { geoCodeData } from "./data";
 
 const LoadingComponent = React.lazy(
   () => import("../components/LoadingComponent")
@@ -26,32 +27,38 @@ export default function Home() {
   };
 
   const calculateRoute = async (tripData: TripData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("/api/suggested-routes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tripData),
-      });
+    //@ts-ignore
+    setTripDetails((prev) => ({ ...prev, eldLogs:geoCodeData.eldLogs }));
+    setRouteData(geoCodeData as any)
+    //   setLoading(true);
+    //   setError(null);
+    //   try {
+    //     const response = await fetch("/api/suggested-routes", {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(tripData),
+    //     });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to calculate route");
-      }
+    //     if (!response.ok) {
+    //       const errorData = await response.json();
+    //       throw new Error(errorData.message || "Failed to calculate route");
+    //     }
 
-      const data = (await response.json()) as RouteWithStops;
-      setRouteData(data);
-      //@ts-ignore
-      setTripDetails((prev) => ({ ...prev, stops: data?.stops }));
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "An unknown error occurred"
-      );
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    //     const data = (await response.json()) as RouteWithStops;
+    //     console.log('====================================');
+    //     console.log(data);
+    //     console.log('====================================');
+    //     setRouteData(data);
+    //     //@ts-ignore
+    //     setTripDetails((prev) => ({ ...prev, stops: data?.stops }));
+    //   } catch (err) {
+    //     setError(
+    //       err instanceof Error ? err.message : "An unknown error occurred"
+    //     );
+    //     console.error(err);
+    //   } finally {
+    //     setLoading(false);
+    //   }
   };
 
   return (
@@ -218,7 +225,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        {routeData?.eldLogs && <GraphPage logs={routeData.eldLogs} />}
+        <GraphPage />
       </main>
 
       <footer className="bg-gray-100 border-t mt-12 py-6">

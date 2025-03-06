@@ -1,5 +1,3 @@
-// types/index.ts
-
 // Location coordinates
 export interface Coordinates {
   lat: number;
@@ -22,6 +20,14 @@ export type StopType =
   | "rest"
   | "fuel"
   | "overnight";
+
+export interface TripDetailsProps{
+  coordinates:number[][]
+  stops: Stop[]
+  totalDistance:number
+  totalDuration:number
+  eldLogs:DailyLogSheet[]
+}
 
 // Stop information
 export interface Stop {
@@ -64,26 +70,30 @@ export interface ELDLogEntry {
   date: string;
   startTime: string;
   endTime: string;
-  status: "driving" | "on-duty" | "off-duty" | "sleeper";
+  status: "driving" | "on-duty" | "off-duty" | "sleeper-berth";
   location: string;
   miles: number;
 }
 
 // Daily log sheet
-export interface GraphSheet {
+export interface DailyLogSheet {
   date: string;
   driverName: string;
   truckNumber: string;
   startLocation: string;
   endLocation: string;
   totalMiles: number;
-  logs: ELDLogEntry[];
+  logs?: ELDLogEntry[];
   graphData: {
     // Data structured for rendering the ELD graph
     hourData: {
       hour: number;
-      status: "driving" | "on-duty" | "off-duty" | "sleeper" | null;
+      status: "driving" | "on-duty" | "off-duty" | "sleeper-berth" | null;
     }[];
+    remarks?: {
+      time: number;
+      location: string;
+  }[]
   };
 }
 
@@ -93,7 +103,7 @@ export interface RouteWithStops {
   stops: Stop[];
   totalDistance: number; // In miles
   totalDuration: number; // In seconds
-  eldLogs: GraphSheet[];
+  eldLogs: DailyLogSheet[];
 }
 
 export interface RouteOutput {
