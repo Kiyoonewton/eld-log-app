@@ -10,8 +10,8 @@
 // }
 
 export interface GraphDataProps {
-  dutyStatuses: {
-    time: number;
+  hourData: {
+    hour: number;
     status: string;
   }[];
   remarks: {

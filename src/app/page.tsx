@@ -6,6 +6,8 @@ import { TripData, RouteWithStops } from "./types";
 import RouteMap from "@/components/RouteMap";
 import OSMLocationForm from "@/components/CityDropdown";
 import { useTrip } from "@/context/TripContext";
+import { useRouter } from "next/navigation";
+import GraphPage from "./graph/Page";
 
 const LoadingComponent = React.lazy(
   () => import("../components/LoadingComponent")
@@ -17,6 +19,11 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   const { setTripDetails } = useTrip();
+  const router = useRouter();
+
+  const gotoGraph = () => {
+    router.push("/graph"); // Navigate to Page 2
+  };
 
   const calculateRoute = async (tripData: TripData) => {
     setLoading(true);
@@ -102,6 +109,14 @@ export default function Home() {
                   </p>
                 </div>
               </div>
+            )}
+            {routeData && (
+              <button
+                onClick={gotoGraph}
+                className="w-full flex items-center justify-center mt-8 px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-70"
+              >
+                View ELD Logs
+              </button>
             )}
           </div>
 
@@ -199,14 +214,11 @@ export default function Home() {
                     </table>
                   </div>
                 </div>
-
-                {/* {routeData.eldLogs && (
-                  <EldLogDisplay logs={routeData.eldLogs} />
-                )} */}
               </div>
             )}
           </div>
         </div>
+        {routeData?.eldLogs && <GraphPage logs={routeData.eldLogs} />}
       </main>
 
       <footer className="bg-gray-100 border-t mt-12 py-6">

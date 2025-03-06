@@ -7,7 +7,10 @@ import { TripDetails } from "@/context/types";
 // Define a type for valid status values
 type DutyStatus = "off-duty" | "sleeper-berth" | "driving" | "on-duty";
 
-const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
+const GraphGrid: React.FC<GraphDataProps> = ({ hourData, remarks }) => {
+  console.log('====================================');
+  console.log(hourData);
+  console.log('====================================');
   const { setTripDetails } = useTrip();
   // SVG dimensions and grid layout
   const svgWidth = 1200;
@@ -34,14 +37,14 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
   // Process status data to find segments and transitions
   const { segments, transitions } = useMemo(() => {
     // Sort the status entries by time
-    const sortedStatuses = [...dutyStatuses].sort((a, b) => a.time - b.time);
+    const sortedStatuses = [...hourData].sort((a, b) => a.hour - b.hour);
 
     const segs: { status: DutyStatus; startTime: number; endTime: number }[] =
       [];
     const trans: {
       fromStatus: DutyStatus;
       toStatus: DutyStatus;
-      time: number;
+      hour: number;
     }[] = [];
 
     // Process each pair of consecutive status entries
@@ -53,8 +56,8 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
         // Add a segment from current time to next time
         segs.push({
           status: currentEntry.status as DutyStatus,
-          startTime: currentEntry.time,
-          endTime: nextEntry.time,
+          startTime: currentEntry.hour,
+          endTime: nextEntry.hour,
         });
 
         // Add a transition if the status changes
@@ -62,7 +65,7 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
           trans.push({
             fromStatus: currentEntry.status as DutyStatus,
             toStatus: nextEntry.status as DutyStatus,
-            time: nextEntry.time,
+            hour: nextEntry.hour,
           });
         }
       }
@@ -70,16 +73,16 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
 
     // Handle the last entry (extend to 24 hours if it's before that)
     const lastEntry = sortedStatuses[sortedStatuses.length - 1];
-    if (lastEntry.status && lastEntry.time < 24) {
+    if (lastEntry.status && lastEntry.hour < 24) {
       segs.push({
         status: lastEntry.status as DutyStatus,
-        startTime: lastEntry.time,
+        startTime: lastEntry.hour,
         endTime: 24,
       });
     }
 
     return { segments: segs, transitions: trans };
-  }, [dutyStatuses]);
+  }, [hourData]);
 
   const totalHours = useMemo(() => {
     const hours: Record<DutyStatus, number> = {
@@ -365,7 +368,7 @@ const GraphGrid: React.FC<GraphDataProps> = ({ dutyStatuses, remarks }) => {
 
         {/* Transitions (vertical blue lines) */}
         {transitions.map((transition, index) => {
-          const x = timeToX(transition.time);
+          const x = timeToX(transition.hour);
           const y1 = statusToY[transition.fromStatus];
           const y2 = statusToY[transition.toStatus];
 

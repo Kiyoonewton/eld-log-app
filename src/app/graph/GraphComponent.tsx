@@ -1,5 +1,5 @@
 "use client";
-import GraphComponent from "@/components/GraphComponent";
+import GraphWrapper from "@/components/GraphComponent";
 // import GraphGrid from '@/components/GraphComponent'
 import React, { useEffect, useState } from "react";
 import { graphData } from "./data";
@@ -10,7 +10,7 @@ import { useTrip } from "@/context/TripContext";
 import { transformTripData } from "@/utils/transformTripData";
 import { GraphData, TripData } from "@/types/transformData";
 
-const page = () => {
+const GraphComponent = (props: any) => {
   const initialData = {
     documentNumber: "BOL12345",
     shipperCommodity: "ABC Shipping Co. - Electronics",
@@ -26,14 +26,20 @@ const page = () => {
   // const [graphData, setGraphData] = useState<GraphDataProps | null>(null);
   const { stops, currentLocation, dropoffLocation } = useTrip();
 
-  async function getGraphData(tripData: TripData[]): Promise<GraphData> {
-    return await transformTripData(tripData);
-  }
-  useEffect(() => {
-    const graphData: Promise<GraphData> = getGraphData(stops);
-    // setGraphData(graphData as any);
-    console.log(graphData);
-  });
+  // async function getGraphData(tripData: TripData[]): Promise<GraphData> {
+  //   return await transformTripData(tripData);
+  // }
+  // useEffect(() => {
+  //   const graphData: Promise<GraphData> = getGraphData(stops);
+  //   // setGraphData(graphData as any);
+  //   console.log(graphData);
+  // });
+
+  const adjustedGraphData = props || graphData;
+
+  console.log("====================================");
+  console.log("adjustedGraphData", adjustedGraphData);
+  console.log("====================================");
 
   return (
     <main style={{ width: "100%", maxWidth: "70%", margin: "80px auto" }}>
@@ -140,7 +146,9 @@ const page = () => {
         </span>
       </div>
       <DriverLogDisplay initialData={initialData} />
-      {graphData && <GraphComponent graphData={graphData} />}
+      {adjustedGraphData && (
+        <GraphWrapper graphData={adjustedGraphData?.logs.graphData} />
+      )}
 
       <ShippingRemarksForm initialData={initialData} className="mb-8 mt-20" />
       <DriverHoursGrid
@@ -162,4 +170,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default GraphComponent;

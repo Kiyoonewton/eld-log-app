@@ -70,7 +70,7 @@ export interface ELDLogEntry {
 }
 
 // Daily log sheet
-export interface DailyLogSheet {
+export interface GraphSheet {
   date: string;
   driverName: string;
   truckNumber: string;
@@ -93,7 +93,7 @@ export interface RouteWithStops {
   stops: Stop[];
   totalDistance: number; // In miles
   totalDuration: number; // In seconds
-  eldLogs: DailyLogSheet[];
+  eldLogs: GraphSheet[];
 }
 
 export interface RouteOutput {

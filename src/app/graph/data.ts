@@ -1,15 +1,15 @@
 export const graphData = {
-  dutyStatuses: [
-    { time: 0, status: "off-duty" },
-    { time: 6, status: "driving" },
-    { time: 7, status: "sleeper-berth" },
-    { time: 9, status: "driving" },
-    { time: 14.5, status: "off-duty" },
-    { time: 15, status: "driving" },
-    { time: 17, status: "sleeper-berth" },
-    { time: 19, status: "driving" },
-    { time: 21, status: "on-duty" },
-    { time: 23, status: "off-duty" },
+  hourData: [
+    { hour: 0, status: "off-duty" },
+    { hour: 6, status: "driving" },
+    { hour: 7, status: "sleeper-berth" },
+    { hour: 9, status: "driving" },
+    { hour: 14.5, status: "off-duty" },
+    { hour: 15, status: "driving" },
+    { hour: 17, status: "sleeper-berth" },
+    { hour: 19, status: "driving" },
+    { hour: 21, status: "on-duty" },
+    { hour: 23, status: "off-duty" },
   ],
   remarks: [
     { time: 6.5, location: "Start Driving" },

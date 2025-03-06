@@ -1,5 +1,5 @@
 export const graphData = {
-  dutyStatuses: [
+  hourData: [
     { time: 0, status: "off-duty" },
     { time: 6.1, status: "driving" },
     { time: 7, status: "sleeper-berth" },

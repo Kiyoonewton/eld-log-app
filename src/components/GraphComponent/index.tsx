@@ -6,7 +6,7 @@ import { GraphDataProps } from "./types";
 const GraphGrid = React.lazy(() => import("./GraphGrid"));
 const LoadingComponent = React.lazy(() => import("../LoadingComponent"));
 
-const GraphComponent = ({ graphData }: { graphData: GraphDataProps }) => {
+const GraphWrapper = ({ graphData }: { graphData: GraphDataProps }) => {
   const [isClient, setIsClient] = useState(false);
 
   // This effect runs after the first render/paint
@@ -44,4 +44,4 @@ const GraphComponent = ({ graphData }: { graphData: GraphDataProps }) => {
   );
 };
 
-export default GraphComponent;
+export default GraphWrapper;
