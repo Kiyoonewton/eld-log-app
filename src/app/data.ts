@@ -133922,11 +133922,17 @@ export const geoCodeData: TripDetailsProps={
     "eldLogs": [
         {
             "date": "2025-03-06",
-            "driverName": "Driver Name",
-            "truckNumber": "Truck #",
-            "startLocation": "Unknown",
-            "endLocation": "Unknown",
-            "totalMiles": 0,
+            "driverName": "John Doe",
+            "truckNumber": "Truck #BOL12345",
+            "startLocation": {address:""},
+            "endLocation": {address:""},
+            "totalMilesDrivingToday": "450 miles",
+            "totalMileageToday": "520 miles",
+            "licensePlate": "ABC-1234 (NY)",
+            "shipperCommodity": "ABC Shipping Co. - Electronics",
+            "remarks": "we are good",
+    "officeAddress": "1234 Business Rd, Suite 100  Dallas, TX 75201",
+    "homeAddress": "5678 Industrial Ave Houston, TX 77001",
             "graphData": {
                 "hourData": [
                     {
@@ -133989,11 +133995,19 @@ export const geoCodeData: TripDetailsProps={
         },
         {
             "date": "2025-03-07",
-            "driverName": "Driver Name",
-            "truckNumber": "Truck #",
-            "startLocation": "38.9292, -110.4639",
-            "endLocation": "39.7305, -105.1709",
-            "totalMiles": 928,
+            "driverName": "John Doe",
+            "truckNumber": "Truck #BOL12345",
+            "startLocation": {address:""},
+            "endLocation": {address:""},
+
+            "totalMilesDrivingToday": "450 miles",
+            "totalMileageToday": "520 miles",
+            "licensePlate": "ABC-1234 (NY)",
+
+            "shipperCommodity": "ABC Shipping Co. - Electronics",
+            "remarks": "we are good",
+    "officeAddress": "1234 Business Rd, Suite 100  Dallas, TX 75201",
+    "homeAddress": "5678 Industrial Ave Houston, TX 77001",
             "graphData": {
                 "hourData": [
                     {
@@ -134046,11 +134060,19 @@ export const geoCodeData: TripDetailsProps={
         },
         {
             "date": "2025-03-08",
-            "driverName": "Driver Name",
-            "truckNumber": "Truck #",
-            "startLocation": "41.0533, -100.5385",
-            "endLocation": "41.7513, -89.6894",
-            "totalMiles": 142,
+            "driverName": "John Doe",
+            "truckNumber": "Truck #BOL12345",
+            "startLocation": {address:""},
+            "endLocation": {address:""},
+
+            "totalMilesDrivingToday": "450 miles",
+            "totalMileageToday": "520 miles",
+            "licensePlate": "ABC-1234 (NY)",
+
+            "shipperCommodity": "ABC Shipping Co. - Electronics",
+            "remarks": "we are good",
+    "officeAddress": "1234 Business Rd, Suite 100  Dallas, TX 75201",
+    "homeAddress": "5678 Industrial Ave Houston, TX 77001",
             "graphData": {
                "hourData": [
                     {
@@ -134103,11 +134125,19 @@ export const geoCodeData: TripDetailsProps={
         },
         {
             "date": "2025-03-09",
-            "driverName": "Driver Name",
-            "truckNumber": "Truck #",
-            "startLocation": "41.1709, -79.1031",
-            "endLocation": "41.1709, -79.1031",
-            "totalMiles": 103,
+            "driverName": "John Doe",
+            "truckNumber": "Truck #BOL12345",
+            "startLocation": {address:""},
+            "endLocation": {address:""},
+
+            "totalMilesDrivingToday": "450 miles",
+            "totalMileageToday": "520 miles",
+            "licensePlate": "ABC-1234 (NY)",
+
+            "shipperCommodity": "ABC Shipping Co. - Electronics",
+            "remarks": "we are good",
+    "officeAddress": "1234 Business Rd, Suite 100  Dallas, TX 75201",
+    "homeAddress": "5678 Industrial Ave Houston, TX 77001",
             "graphData": {
                 "hourData": [
                     {

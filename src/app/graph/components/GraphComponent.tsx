@@ -1,6 +1,6 @@
 "use client";
+import { GraphDataProps } from "@/components/GraphComponent/types";
 import React, { useState, useEffect, Suspense, FC } from "react";
-import { GraphDataProps } from "./types";
 
 // Use dynamic import for the GraphGrid component
 const GraphGrid = React.lazy(() => import("./GraphGrid"));

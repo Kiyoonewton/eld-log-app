@@ -1,40 +1,44 @@
 "use client";
 // components/EldLogDisplay.tsx
-import GraphComponent from "@/app/graph/components/GraphWrapper";
+import GraphWrapper from "@/app/graph/components/GraphWrapper";
 import React, { useState } from "react";
 import { useTrip } from "@/context/TripContext";
 
 const GraphPage = () => {
   const [activeLog, setActiveLog] = useState<number>(0);
   const { eldLogs } = useTrip();
-  const logs = eldLogs
+  const logs = eldLogs;
   if (!logs?.length) return null;
   const currentLog = logs[activeLog];
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="bg-gray-50 p-4 border-b">
-        <h2 className="text-xl font-semibold">Daily Electronic Log Sheets</h2>
+    <>
+      <div className="bg-white rounded-lg shadow-md overflow-hidden flex justify-center">
+        <div className="bg-gray-50 p-4 border-b">
+          <h2 className="text-xl font-semibold text-center">
+            Daily Electronic Log Sheets
+          </h2>
 
-        <div className="flex mt-4 overflow-x-auto pb-2">
-          {logs.map((log, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveLog(index)}
-              className={`px-4 py-2 rounded-md mr-2 text-sm font-medium whitespace-nowrap
+          <div className="flex mt-4 overflow-x-auto pb-2">
+            {logs.map((log, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveLog(index)}
+                className={`px-4 py-2 rounded-md mr-2 text-sm font-medium whitespace-nowrap
                 ${
                   activeLog === index
                     ? "bg-blue-600 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
-            >
-              {new Date(log.date).toLocaleDateString()}
-            </button>
-          ))}
+              >
+                {new Date(log.date).toLocaleDateString()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-      {currentLog && <GraphComponent logs={currentLog} />}
-    </div>
+      {currentLog && <GraphWrapper logs={currentLog} />}
+    </>
   );
 };
 

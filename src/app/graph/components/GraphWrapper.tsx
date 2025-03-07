@@ -1,12 +1,13 @@
 "use client";
-import GraphComponent from "@/app/graph/components";
 import React from "react";
 import ShippingRemarksForm from "@/components/ShippingRemarksForm";
 import DriverHoursGrid from "@/components/DriverHoursGrid";
 import DriverLogDisplay from "@/components/DriverLogData";
 import { useTrip } from "@/context/TripContext";
+import GraphComponent from "./GraphComponent";
+import { DailyLogSheet } from "@/app/types";
 
-const GraphWrapper = (props: any) => {
+const GraphWrapper = ({logs}:{logs: DailyLogSheet}) => {
   const initialData = {
     documentNumber: "BOL12345",
     shipperCommodity: "ABC Shipping Co. - Electronics",
@@ -18,11 +19,10 @@ const GraphWrapper = (props: any) => {
     officeAddress: "1234 Business Rd, Suite 100  Dallas, TX 75201",
     homeAddress: "5678 Industrial Ave Houston, TX 77001",
   };
-  const today = new Date();
-  const { currentLocation, dropoffLocation } = useTrip();
 
+  const date = new Date("2025-03-09")
 
-  const adjustedGraphData = props;
+  const adjustedGraphData = logs;
 
   return (
     <main style={{ width: "100%", maxWidth: "70%", margin: "80px auto" }}>
@@ -38,7 +38,7 @@ const GraphWrapper = (props: any) => {
                 className="weight font-extrabold text-blue-500"
                 style={{ borderBottom: "2px solid black", paddingRight: "5px" }}
               >
-                {today.toLocaleString("en-US", { month: "long" })}
+                {date.toLocaleString("en-US", { month: "long" })}
               </p>
               <p className="text-center">(month)</p>
             </span>
@@ -52,7 +52,7 @@ const GraphWrapper = (props: any) => {
                   padding: "0 10px",
                 }}
               >
-                {today.getDate()}
+                {date.getDate()}
               </p>
               <p className="text-center">(day)</p>
             </span>
@@ -62,7 +62,7 @@ const GraphWrapper = (props: any) => {
                 className="weight font-extrabold text-blue-500"
                 style={{ borderBottom: "2px solid black", textAlign: "center" }}
               >
-                {today.getFullYear()}
+                {date.getFullYear()}
               </h1>
               <p className="text-center">(year)</p>
             </span>
@@ -104,7 +104,7 @@ const GraphWrapper = (props: any) => {
               margin: "auto",
             }}
           >
-            {dropoffLocation?.address || ""}
+            {logs.startLocation?.address || ""}
           </p>
         </span>
         <span
@@ -124,13 +124,13 @@ const GraphWrapper = (props: any) => {
               margin: "auto",
             }}
           >
-            {currentLocation?.address || ""}
+            {logs.endLocation?.address || ""}
           </p>
         </span>
       </div>
       <DriverLogDisplay initialData={initialData} />
       {adjustedGraphData && (
-        <GraphComponent graphData={adjustedGraphData?.logs.graphData} />
+        <GraphComponent graphData={adjustedGraphData.graphData} />
       )}
 
       <ShippingRemarksForm initialData={initialData} className="mb-8 mt-20" />

@@ -7,7 +7,6 @@ import RouteMap from "@/components/RouteMap";
 import OSMLocationForm from "@/components/CityDropdown";
 import { useTrip } from "@/context/TripContext";
 import { useRouter } from "next/navigation";
-import GraphPage from "./graph/page";
 import { geoCodeData } from "./data";
 
 const LoadingComponent = React.lazy(
@@ -225,7 +224,6 @@ export default function Home() {
             )}
           </div>
         </div>
-        <GraphPage />
       </main>
 
       <footer className="bg-gray-100 border-t mt-12 py-6">

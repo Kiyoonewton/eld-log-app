@@ -4,6 +4,10 @@ export interface Coordinates {
   lng: number;
 }
 
+export interface LocationProps {
+  address: string;
+  coordinates?: Coordinates;
+}
 // Trip input data
 export interface TripData {
   currentLocation: Coordinates;
@@ -80,12 +84,16 @@ export interface DailyLogSheet {
   date: string;
   driverName: string;
   truckNumber: string;
-  startLocation: string;
-  endLocation: string;
-  totalMiles: number;
-  logs?: ELDLogEntry[];
+  startLocation: LocationProps;
+  endLocation: LocationProps;
+  totalMilesDrivingToday:string;
+  totalMileageToday:string;
+  licensePlate:string;
+  shippeCommodity:string;
+  remarks:string;
+  officeAddress:string;
+  homeAddress:string;
   graphData: {
-    // Data structured for rendering the ELD graph
     hourData: {
       hour: number;
       status: "driving" | "on-duty" | "off-duty" | "sleeper-berth" | null;
