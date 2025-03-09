@@ -1,5 +1,4 @@
 "use client";
-// pages/index.tsx
 import React, { useState } from "react";
 import Head from "next/head";
 import { TripData, RouteWithStops } from "./types";
@@ -26,38 +25,32 @@ export default function Home() {
   };
 
   const calculateRoute = async (tripData: TripData) => {
-    //@ts-ignore
-    setTripDetails((prev) => ({ ...prev, eldLogs:geoCodeData.eldLogs }));
-    setRouteData(geoCodeData as any)
-    //   setLoading(true);
-    //   setError(null);
-    //   try {
-    //     const response = await fetch("/api/suggested-routes", {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(tripData),
-    //     });
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("http://localhost:8000/api/trip/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trip: tripData }),
+      });
 
-    //     if (!response.ok) {
-    //       const errorData = await response.json();
-    //       throw new Error(errorData.message || "Failed to calculate route");
-    //     }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to calculate route");
+      }
 
-    //     const data = (await response.json()) as RouteWithStops;
-    //     console.log('====================================');
-    //     console.log(data);
-    //     console.log('====================================');
-    //     setRouteData(data);
-    //     //@ts-ignore
-    //     setTripDetails((prev) => ({ ...prev, stops: data?.stops }));
-    //   } catch (err) {
-    //     setError(
-    //       err instanceof Error ? err.message : "An unknown error occurred"
-    //     );
-    //     console.error(err);
-    //   } finally {
-    //     setLoading(false);
-    //   }
+      const data = (await response.json()) as RouteWithStops;
+      setRouteData(data);
+      //@ts-ignore
+      setTripDetails((prev) => ({ ...prev, seldLogs: geoCodeData.eldLogs }));
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

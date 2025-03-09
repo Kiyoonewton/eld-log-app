@@ -1,7 +1,7 @@
 // Location coordinates
 export interface Coordinates {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
 }
 
 export interface LocationProps {
@@ -10,9 +10,9 @@ export interface LocationProps {
 }
 // Trip input data
 export interface TripData {
-  currentLocation: Coordinates;
-  pickupLocation: Coordinates;
-  dropoffLocation: Coordinates;
+  currentLocation: LocationProps;
+  pickupLocation: LocationProps;
+  dropoffLocation: LocationProps;
   currentCycleUsed: number;
 }
 

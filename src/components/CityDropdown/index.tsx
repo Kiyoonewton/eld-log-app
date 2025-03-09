@@ -210,27 +210,6 @@ export default function OSMLocationForm({
     await convertAddressToCoordinates(suggestion, field);
   };
 
-  // async function fetchStops(tripData: TripDetails) {
-  //   // setLoading(true);
-  //   try {
-  //     const res = await fetch("/api/saveTrip", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         tripData,
-  //       }),
-  //     });
-
-  //     if (!res.ok) throw new Error("Failed to fetch stops");
-  //     const data = await res.json();
-  //     setTripDetails(tripData);
-  //   } catch (error) {
-  //     console.error("Error fetching stops:", error);
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // }
-
   // Handle "Use My Location" with OpenStreetMap reverse geocoding
   const handleUseMyLocation = async () => {
     setIsLoading(true);
@@ -298,28 +277,7 @@ export default function OSMLocationForm({
       return;
     }
 
-    setValidationErrors({});
-    const start = {
-      latitude: Number(data.currentLocation.coordinates?.latitude.toFixed(6)),
-      longitude: Number(data.currentLocation.coordinates?.longitude.toFixed(6)),
-    };
-
-    const waypoint = {
-      latitude: Number(data.pickupLocation.coordinates?.latitude.toFixed(6)),
-      longitude: Number(data.pickupLocation.coordinates?.longitude.toFixed(6)),
-    };
-
-    const end = {
-      latitude: Number(data.dropoffLocation.coordinates?.latitude.toFixed(6)),
-      longitude: Number(data.dropoffLocation.coordinates?.longitude.toFixed(6)),
-    };
-    const distanceAndDuration = await getDistanceAndTimeOSRM(
-      start,
-      waypoint,
-      end
-    );
-
-    const tripData = {
+    const tripData:TripData = {
       currentLocation: {
         address: data.currentLocation.address,
         coordinates: {
@@ -353,80 +311,11 @@ export default function OSMLocationForm({
           ),
         },
       },
-      currentCycleHours: data.currentCycleHours,
-
-      // estimatedDistance: distanceAndDuration?.distance,
-      // estimatedDuration: distanceAndDuration?.duration,
-    };
-
-    const tripdata: TripData = {
-      currentLocation: {
-        lat: Number(data.currentLocation.coordinates?.latitude.toFixed(6)),
-        lng: Number(data.currentLocation.coordinates?.longitude.toFixed(6)),
-      },
-      pickupLocation: {
-        lat: Number(data.pickupLocation.coordinates?.latitude.toFixed(6)),
-        lng: Number(data.pickupLocation.coordinates?.longitude.toFixed(6)),
-      },
-      dropoffLocation: {
-        lat: Number(data.dropoffLocation.coordinates?.latitude.toFixed(6)),
-        lng: Number(data.dropoffLocation.coordinates?.longitude.toFixed(6)),
-      },
       currentCycleUsed: data.currentCycleHours,
     };
 
-    onCalculate(tripdata);
-
-    // await fetchStops(tripData);
-
-    const res = await fetch("/api/suggested-stops", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ trip: tripData }),
-    });
-
-    const trip = await res.json();
-
-    if (res.ok) {
-      // setTripId(trip.tripId);
-      // alert("Trip saved successfully!");
-    } else {
-      // alert("Failed to save trip.");
-    }
-
-    // Format data for display in alert
-    // const alertMessage = `
-    //   Form submitted successfully!
-
-    //   Current Location: ${data.currentLocation.address}
-    //   Coordinates: ${data.currentLocation.coordinates?.latitude.toFixed(
-    //     6
-    //   )}, ${data.currentLocation.coordinates?.longitude.toFixed(6)}
-
-    //   Pickup Location: ${data.pickupLocation.address}
-    //   Coordinates: ${data.pickupLocation.coordinates?.latitude.toFixed(
-    //     6
-    //   )}, ${data.pickupLocation.coordinates?.longitude.toFixed(6)}
-
-    //   Dropoff Location: ${data.dropoffLocation.address}
-    //   Coordinates: ${data.dropoffLocation.coordinates?.latitude.toFixed(
-    //     6
-    //   )}, ${data.dropoffLocation.coordinates?.longitude.toFixed(6)}
-
-    //   8-Day Cycle Hours Used: ${data.currentCycleHours}
-    //   Remaining Cycle Time: ${(
-    //     MAX_CYCLE_HOURS - data.currentCycleHours
-    //   ).toFixed(1)} hours
-
-    //   Estimated Daily Hours: ${estimatedDailyHours.toFixed(1)}
-    //   Remaining Daily Time: ${remainingDailyHours.toFixed(1)} hours
-    // `;
-
-    // alert(alertMessage);
-
-    // Here you would typically make an API call to your backend
+    onCalculate(tripData);
   };
-
   // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
