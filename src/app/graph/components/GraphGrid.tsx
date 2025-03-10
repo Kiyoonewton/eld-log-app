@@ -3,11 +3,12 @@ import React, { useMemo } from "react";
 import { useTrip } from "@/context/TripContext";
 import { TripDetails } from "@/context/types";
 import { GraphDataProps } from "@/components/GraphComponent/types";
+import { NewDailyLogSheet } from "@/app/types";
 
 // Define a type for valid status values
 type DutyStatus = "off-duty" | "sleeper-berth" | "driving" | "on-duty";
 
-const GraphGrid: React.FC<GraphDataProps> = ({ hourData, remarks }) => {
+const GraphGrid: React.FC<NewDailyLogSheet['graphData']> = ({ hourData, remarks }) => {
   const { setTripDetails } = useTrip();
   // SVG dimensions and grid layout
   const svgWidth = 1200;
@@ -94,11 +95,6 @@ const GraphGrid: React.FC<GraphDataProps> = ({ hourData, remarks }) => {
       hours[segment.status] += duration;
     });
     const total = Object.values(hours).reduce((sum, value) => sum + value, 0);
-    //@ts-ignore
-    setTripDetails((prev:TripDetails) => ({
-      ...prev as TripDetails,
-      onDutyHoursToday: hours.driving + hours["on-duty"],
-    }));
     
     return { ...hours, total };
   }, [segments]);
@@ -383,7 +379,7 @@ const GraphGrid: React.FC<GraphDataProps> = ({ hourData, remarks }) => {
         })}
 
         {/* Remarks/location markers */}
-        {remarks.map((remark, index) => {
+        {remarks?.map((remark, index) => {
           const x = timeToX(remark.time);
           const y = headerHeight + 4 * rowHeight + 30 - 15;
 

@@ -192,7 +192,6 @@ export default function OSMLocationForm({
       const locationData = await osmGeocodingService.geocode(address);
 
       setValue(`${field}.coordinates`, locationData.coordinates);
-      console.log(`Converted ${field}:`, locationData);
     } catch (error) {
       console.error(`Error geocoding ${field}:`, error);
     } finally {

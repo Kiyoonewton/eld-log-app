@@ -3,26 +3,23 @@ import React from "react";
 import ShippingRemarksForm from "@/components/ShippingRemarksForm";
 import DriverHoursGrid from "@/components/DriverHoursGrid";
 import DriverLogDisplay from "@/components/DriverLogData";
-import { useTrip } from "@/context/TripContext";
 import GraphComponent from "./GraphComponent";
-import { DailyLogSheet } from "@/app/types";
+import { NewDailyLogSheet } from "@/app/types";
 
-const GraphWrapper = ({logs}:{logs: DailyLogSheet}) => {
-  const initialData = {
-    documentNumber: "BOL12345",
-    shipperCommodity: "ABC Shipping Co. - Electronics",
-    remarks: "we are good",
-    licensePlate: "ABC-1234 (NY)",
-    totalMilesDrivingToday: "450 miles",
-    totalMileageToday: "520 miles",
-    carrierName: "John Doe",
-    officeAddress: "1234 Business Rd, Suite 100  Dallas, TX 75201",
-    homeAddress: "5678 Industrial Ave Houston, TX 77001",
+const GraphWrapper = ({ logs }: { logs: NewDailyLogSheet }) => {
+  const shippingData = {
+    documentNumber: logs.truckNumber,
+    carrier: logs.carrier,
+    remarks: logs.remarks,
+    licensePlate: logs.licensePlate,
+    totalMilesDrivingToday: logs.totalMilesDrivingToday,
+    totalMileageToday: logs.totalMileageToday,
+    carrierName: logs.driverName,
+    officeAddress: logs.officeAddress,
+    homeAddress: logs.homeAddress,
   };
 
-  const date = new Date("2025-03-09")
-
-  const adjustedGraphData = logs;
+  const date = new Date(logs.date);
 
   return (
     <main style={{ width: "100%", maxWidth: "70%", margin: "80px auto" }}>
@@ -104,7 +101,7 @@ const GraphWrapper = ({logs}:{logs: DailyLogSheet}) => {
               margin: "auto",
             }}
           >
-            {logs.startLocation?.address || ""}
+            {logs.startLocation || ""}
           </p>
         </span>
         <span
@@ -124,16 +121,14 @@ const GraphWrapper = ({logs}:{logs: DailyLogSheet}) => {
               margin: "auto",
             }}
           >
-            {logs.endLocation?.address || ""}
+            {logs.endLocation || ""}
           </p>
         </span>
       </div>
-      <DriverLogDisplay initialData={initialData} />
-      {adjustedGraphData && (
-        <GraphComponent graphData={adjustedGraphData.graphData} />
-      )}
+      <DriverLogDisplay shippingData={shippingData} />
+      {logs && <GraphComponent graphData={logs.graphData} />}
 
-      <ShippingRemarksForm initialData={initialData} className="mb-8 mt-20" />
+      <ShippingRemarksForm shippingData={shippingData} className="mb-8 mt-20" />
       <DriverHoursGrid
         driversData={{
           eightDayRule: {

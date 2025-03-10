@@ -42,7 +42,7 @@ export default function Home() {
       const data = (await response.json()) as RouteWithStops;
       setRouteData(data);
       //@ts-ignore
-      setTripDetails((prev) => ({ ...prev, seldLogs: geoCodeData.eldLogs }));
+      setTripDetails((prev) => ({ ...prev, eldLogs: data.eldLogs }));
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"

@@ -97,11 +97,6 @@ const GraphGrid: React.FC<GraphDataProps> = ({ hourData, remarks }) => {
       hours[segment.status] += duration;
     });
     const total = Object.values(hours).reduce((sum, value) => sum + value, 0);
-    //@ts-ignore
-    setTripDetails((prev:TripDetails) => ({
-      ...prev as TripDetails,
-      onDutyHoursToday: hours.driving + hours["on-duty"],
-    }));
     
     return { ...hours, total };
   }, [segments]);

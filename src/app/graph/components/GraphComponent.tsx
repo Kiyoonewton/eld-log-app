@@ -1,12 +1,12 @@
 "use client";
-import { GraphDataProps } from "@/components/GraphComponent/types";
+import { NewDailyLogSheet } from "@/app/types";
 import React, { useState, useEffect, Suspense, FC } from "react";
 
 // Use dynamic import for the GraphGrid component
 const GraphGrid = React.lazy(() => import("./GraphGrid"));
 const LoadingComponent = React.lazy(() => import("../../../components/LoadingComponent"));
 
-const GraphComponent = ({ graphData }: { graphData: GraphDataProps }) => {
+const GraphComponent = ({ graphData }: { graphData: NewDailyLogSheet['graphData'] }) => {
   const [isClient, setIsClient] = useState(false);
 
   // This effect runs after the first render/paint

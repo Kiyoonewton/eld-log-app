@@ -1,5 +1,4 @@
 "use client";
-// components/EldLogDisplay.tsx
 import GraphWrapper from "@/app/graph/components/GraphWrapper";
 import React, { useState } from "react";
 import { useTrip } from "@/context/TripContext";

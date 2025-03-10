@@ -14,9 +14,21 @@ export interface ShippingFormData {
     createdAt: Date;
     remarks?: ShippingFormData;
   }
+
+  export interface shippingData {
+    documentNumber: string;
+    shipperCommodity: string;
+    remarks: string;
+    licensePlate: string;
+    totalMilesDrivingToday: string;
+    totalMileageToday: string;
+    carrierName: string;
+    officeAddress: string;
+    homeAddress: string;
+}
   
   // Form props type
   export interface ShippingFormProps {
-    initialData?: Partial<ShippingFormData>;
+    shippingData: Partial<shippingData>;
     className?: string;
   }

@@ -21,7 +21,7 @@ const DriverHoursGrid: React.FC<DriverHoursGridProps> = ({
           <p>end of day</p>
         </span>
         <span className="border-b-2 border-black w-full flex items-end text-center text-blue-500 justify-center">
-          {onDutyHoursToday}
+          {onDutyHoursToday.toFixed(2)}
         </span>
         <span>
           <p className="font-bold whitespace-nowrap">70 Hour/</p>
@@ -31,19 +31,19 @@ const DriverHoursGrid: React.FC<DriverHoursGridProps> = ({
         <span className="border-b-2 border-black w-full flex items-end">
           A.
           <p className="text-blue-500 flex justify-center flex-1">
-            {onDutyHoursToday}
+            {onDutyHoursToday.toFixed(2)}
           </p>
         </span>
         <span className="border-b-2 border-black w-full flex items-end">
           B.
           <p className="text-blue-500 flex justify-center flex-1">
-            {onDutyHoursToday}
+            {onDutyHoursToday.toFixed(2)}
           </p>
         </span>
         <span className="border-b-2 border-black w-full flex items-end">
           C.
           <p className="text-blue-500 flex justify-center flex-1">
-            {onDutyHoursToday}
+            {onDutyHoursToday.toFixed(2)}
           </p>
         </span>
         <span>

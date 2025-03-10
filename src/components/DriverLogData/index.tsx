@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-const DriverLogDisplay: FC<any> = ({ initialData }) => {
+const DriverLogDisplay: FC<any> = ({ shippingData }) => {
   return (
     <div className="w-100 mx-auto pt-12 pb-5">
       {/* First row - Total Miles and Total Mileage */}
@@ -8,7 +8,7 @@ const DriverLogDisplay: FC<any> = ({ initialData }) => {
         <div className="flex">
           <div className="flex-1 mr-2">
             <div className=" border-black border-2 p-2 h-10 text-lg text-center text-blue-500">
-              {initialData.totalMilesDrivingToday}
+              {shippingData.totalMilesDrivingToday}
             </div>
             <div className="text-center text-sm mt-1">
               Total Miles Driving Today
@@ -16,14 +16,14 @@ const DriverLogDisplay: FC<any> = ({ initialData }) => {
           </div>
           <div className="flex-1 mr-2">
             <div className="border-2 border-black  p-2 h-10 text-lg text-center text-blue-500">
-              {initialData.totalMileageToday}
+              {shippingData.totalMileageToday}
             </div>
             <div className="text-center text-sm mt-1">Total Mileage Today</div>
           </div>
         </div>
         <div className="flex-grow flex-col ml-2">
           <div className="border-b-2 border-black p-2 h-10 text-lg text-center text-blue-500">
-            {initialData.carrierName}
+            {shippingData.carrier}
           </div>
           <div className="text-center text-sm mt-1">
             Name of Carrier or Carriers
@@ -35,7 +35,7 @@ const DriverLogDisplay: FC<any> = ({ initialData }) => {
       <div className="flex">
         <div className="flex-1 mr-2">
           <div className="border-2 border-black p-2 h-10 text-lg text-center text-blue-500">
-            {initialData.licensePlate}
+            {shippingData.licensePlate}
           </div>
           <div className="text-center text-sm mt-1">
             Truck/Tractor and Trailer Numbers or License Plate(s)/State (show
@@ -44,11 +44,11 @@ const DriverLogDisplay: FC<any> = ({ initialData }) => {
         </div>
         <div className="flex-1 flex-col ml-2">
           <div className="border-b-2 border-black p-2 text-lg text-center text-blue-500">
-            {initialData.officeAddress}
+            {shippingData.officeAddress}
           </div>
           <div className="text-sm mt-0 text-center">Main Office Address</div>
           <div className="border-b-2 border-black p-2 mt-2 text-lg text-center text-blue-500">
-            {initialData.homeAddress}
+            {shippingData.homeAddress}
           </div>
           <div className="text-sm mt-0 text-center">Home Terminal Address</div>
         </div>

@@ -1,3 +1,4 @@
+'use client'
 // components/RouteMap.tsx
 import React, { useEffect, useRef } from "react";
 import { RouteWithStops, Stop } from "@/app/types";

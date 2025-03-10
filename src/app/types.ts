@@ -105,6 +105,31 @@ export interface DailyLogSheet {
   };
 }
 
+export interface NewDailyLogSheet {
+  date: string;
+  driverName: string;
+  truckNumber: string;
+  startLocation: string;
+  endLocation: string;
+  totalMilesDrivingToday:string;
+  totalMileageToday:string;
+  licensePlate:string;
+  carrier:string;
+  remarks:string;
+  officeAddress:string;
+  homeAddress:string;
+  graphData: {
+    hourData: {
+      hour: number;
+      status: "driving" | "on-duty" | "off-duty" | "sleeper-berth" | null;
+    }[];
+    remarks?: {
+      time: number;
+      location: string;
+  }[]
+  };
+}
+
 // Final route data including stops and ELD logs
 export interface RouteWithStops {
   coordinates: [number, number][]; // [longitude, latitude]

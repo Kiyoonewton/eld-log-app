@@ -3,7 +3,7 @@
 import { ShippingFormProps } from "./types";
 
 const ShippingRemarksForm: React.FC<ShippingFormProps> = ({
-  initialData,
+  shippingData,
   className = "",
 }) => {
   return (
@@ -21,7 +21,7 @@ const ShippingRemarksForm: React.FC<ShippingFormProps> = ({
           <div className="ml-4">
             <div className="mb-3">
               <div className="w-full border-b border-gray-300 py-1 text-base font-semibold text-blue-500">
-                {initialData?.documentNumber || ""}
+                {shippingData?.documentNumber || ""}
               </div>
               <div className="text-sm">BOL or Manifest No.</div>
               <div className="text-sm">or</div>
@@ -29,7 +29,7 @@ const ShippingRemarksForm: React.FC<ShippingFormProps> = ({
 
             <div className="mb-2">
               <div className="w-full border-b border-gray-300 py-1 text-base font-semibold text-blue-500">
-                {initialData?.shipperCommodity || ""}
+                {shippingData?.shipperCommodity || ""}
               </div>
               <div className="text-sm">Shipper & Commodity</div>
             </div>
