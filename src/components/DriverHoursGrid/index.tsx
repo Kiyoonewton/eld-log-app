@@ -7,10 +7,9 @@ import { useTrip } from "@/context/TripContext";
 // Define the types for our data
 
 const DriverHoursGrid: React.FC<DriverHoursGridProps> = ({
-  driversData,
   className = "",
 }) => {
-    const{onDutyHoursToday} = useTrip();
+  const { onDutyHoursToday } = useTrip();
   return (
     <div className={`driver-hours-grid ${className}`}>
       {/* Header Row */}
@@ -52,21 +51,15 @@ const DriverHoursGrid: React.FC<DriverHoursGridProps> = ({
         </span>
         <span className="border-b-2 border-black w-full flex items-end">
           A.
-          <p className="text-blue-500 flex justify-center flex-1">
-          {}
-          </p>
+          <p className="text-blue-500 flex justify-center flex-1">{}</p>
         </span>
         <span className="border-b-2 border-black w-full flex items-end">
           B.
-          <p className="text-blue-500 flex justify-center flex-1">
-          {}
-          </p>
+          <p className="text-blue-500 flex justify-center flex-1">{}</p>
         </span>
         <span className="border-b-2 border-black w-full flex items-end">
           C.
-          <p className="text-blue-500 flex justify-center flex-1">
-            {}
-          </p>
+          <p className="text-blue-500 flex justify-center flex-1">{}</p>
         </span>
         <span>
           <p className="font-bold">*if you take</p>

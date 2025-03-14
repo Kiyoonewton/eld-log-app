@@ -1,4 +1,4 @@
-import { NewDailyLogSheet, Stop, TripDetailsProps } from "@/app/types";
+import { NewDailyLogSheet, Stop } from "@/app/types";
 
 export interface Coordinates {
   latitude: number;

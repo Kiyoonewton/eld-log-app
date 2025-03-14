@@ -51,11 +51,11 @@ export interface OSRMRouteResponse {
       coordinates: [number, number][];
       type: string;
     };
-    legs: any[];
+    legs: unknown[];
     weight: number;
     weight_name: string;
   }[];
-  waypoints: any[];
+  waypoints: unknown[];
   code: string;
   message?: string;
 }
@@ -114,7 +114,7 @@ export interface NewDailyLogSheet {
   totalMilesDrivingToday:string;
   totalMileageToday:string;
   licensePlate:string;
-  carrier:string;
+  carrier?:string;
   remarks:string;
   officeAddress:string;
   homeAddress:string;

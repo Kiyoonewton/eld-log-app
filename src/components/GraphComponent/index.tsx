@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, Suspense, FC } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { GraphDataProps } from "./types";
 
 // Use dynamic import for the GraphGrid component

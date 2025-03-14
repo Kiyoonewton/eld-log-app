@@ -9,7 +9,7 @@ import { NewDailyLogSheet } from "@/app/types";
 const GraphWrapper = ({ logs }: { logs: NewDailyLogSheet }) => {
   const shippingData = {
     documentNumber: logs.truckNumber,
-    carrier: logs.carrier,
+    carrier: logs.carrier || '',
     remarks: logs.remarks,
     licensePlate: logs.licensePlate,
     totalMilesDrivingToday: logs.totalMilesDrivingToday,
@@ -22,7 +22,7 @@ const GraphWrapper = ({ logs }: { logs: NewDailyLogSheet }) => {
   const date = new Date(logs.date);
 
   return (
-    <main style={{ width: "100%", maxWidth: "70%", margin: "80px auto" }}>
+    <main style={{ width: "100%", maxWidth: "90%", margin: "80px auto" }}>
       <div className="flex justify-between">
         <div className="w-fit">
           <h1 className="text-3xl weight font-extrabold">Drivers Daily Logs</h1>

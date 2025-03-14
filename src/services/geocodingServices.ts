@@ -140,7 +140,7 @@ export interface Coordinates {
         const data = await response.json();
         
         // Extract display names from results
-        return data.map((item: any) => item.display_name);
+        return data.map((item: {display_name:string}) => item.display_name);
       } catch (error) {
         console.error("Error in address search:", error);
         return [];

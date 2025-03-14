@@ -29,7 +29,7 @@ const ShippingRemarksForm: React.FC<ShippingFormProps> = ({
 
             <div className="mb-2">
               <div className="w-full border-b border-gray-300 py-1 text-base font-semibold text-blue-500">
-                {shippingData?.shipperCommodity || ""}
+                {shippingData?.shipperCommodity || "Steel coils"}
               </div>
               <div className="text-sm">Shipper & Commodity</div>
             </div>

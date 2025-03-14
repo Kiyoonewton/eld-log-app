@@ -1,6 +1,17 @@
 import React, { FC } from "react";
 
-const DriverLogDisplay: FC<any> = ({ shippingData }) => {
+interface DriverLogDisplayProps {
+  shippingData: {
+    totalMilesDrivingToday: string;
+    totalMileageToday: string;
+    carrier: string;
+    licensePlate: string;
+    officeAddress: string;
+    homeAddress: string;
+  };
+}
+
+const DriverLogDisplay: FC<DriverLogDisplayProps> = ({ shippingData }) => {
   return (
     <div className="w-100 mx-auto pt-12 pb-5">
       {/* First row - Total Miles and Total Mileage */}

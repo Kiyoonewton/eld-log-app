@@ -1,10 +1,9 @@
 "use client";
 import { NewDailyLogSheet } from "@/app/types";
-import React, { useState, useEffect, Suspense, FC } from "react";
-
+import React, { useState, useEffect, Suspense } from "react";
 // Use dynamic import for the GraphGrid component
 const GraphGrid = React.lazy(() => import("./GraphGrid"));
-const LoadingComponent = React.lazy(() => import("../../../components/LoadingComponent"));
+const LoadingComponent = React.lazy(() => import("../../LoadingComponent"));
 
 const GraphComponent = ({ graphData }: { graphData: NewDailyLogSheet['graphData'] }) => {
   const [isClient, setIsClient] = useState(false);

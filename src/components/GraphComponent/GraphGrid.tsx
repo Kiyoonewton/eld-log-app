@@ -1,17 +1,11 @@
 "use client";
 import React, { useMemo } from "react";
 import { GraphDataProps } from "./types";
-import { useTrip } from "@/context/TripContext";
-import { TripDetails } from "@/context/types";
 
 // Define a type for valid status values
 type DutyStatus = "off-duty" | "sleeper-berth" | "driving" | "on-duty";
 
 const GraphGrid: React.FC<GraphDataProps> = ({ hourData, remarks }) => {
-  console.log('====================================');
-  console.log(hourData);
-  console.log('====================================');
-  const { setTripDetails } = useTrip();
   // SVG dimensions and grid layout
   const svgWidth = 1200;
   const svgHeight = 320;

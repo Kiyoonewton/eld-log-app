@@ -13,6 +13,7 @@ import {
   Loader2,
   Clock,
   AlertTriangle,
+  CheckCircle,
 } from "lucide-react";
 // Import types and schema - make sure to update your locationSchema.ts with the code I provided
 import {
@@ -23,8 +24,6 @@ import {
 
 // Import the OpenStreetMap geocoding service
 import { osmGeocodingService } from "@/services/geocodingServices";
-import { getDistanceAndTimeOSRM } from "../CalculateTripDistance/getDistanceAndTimeOSRM";
-import { useTrip } from "@/context/TripContext";
 import { TripData } from "@/app/types";
 
 // Rate limiting helper function to avoid hitting Nominatim's rate limits
@@ -51,8 +50,10 @@ const MAX_CYCLE_HOURS = 70; // Maximum hours in 8-day cycle (70-hour rule)
 
 export default function OSMLocationForm({
   onCalculate,
+  isRouteData,
 }: {
   onCalculate: (data: TripData) => void;
+  isRouteData: boolean;
 }) {
   // React Hook Form with Zod integration
   const {
@@ -82,7 +83,6 @@ export default function OSMLocationForm({
   const pickupLocationValue = watch("pickupLocation.address");
   const dropoffLocationValue = watch("dropoffLocation.address");
   const currentCycleHours = watch("currentCycleHours");
-  const { setTripDetails } = useTrip();
 
   // Calculate remaining hours
   // We'll use a standard calculation to derive daily hours from cycle hours
@@ -238,24 +238,6 @@ export default function OSMLocationForm({
         (error) => {
           console.error("Geolocation error:", error);
           setIsLoading(false);
-
-          // Show error message based on the error code
-          let errorMessage = "Unable to get your location.";
-
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage =
-                "Location access was denied. Please allow location access in your browser settings.";
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage = "Location information is unavailable.";
-              break;
-            case error.TIMEOUT:
-              errorMessage = "Location request timed out.";
-              break;
-          }
-
-          // alert(errorMessage);
         }
       );
     } else {
@@ -276,7 +258,7 @@ export default function OSMLocationForm({
       return;
     }
 
-    const tripData:TripData = {
+    const tripData: TripData = {
       currentLocation: {
         address: data.currentLocation.address,
         coordinates: {
@@ -312,7 +294,6 @@ export default function OSMLocationForm({
       },
       currentCycleUsed: data.currentCycleHours,
     };
-
     onCalculate(tripData);
   };
   // Close suggestions when clicking outside
@@ -429,8 +410,8 @@ export default function OSMLocationForm({
               Please enter a value between 0 and 70 hours
             </p>
           )}
-          <p className="text-xs text-gray-500 mt-1">
-            Enter the total hours you've worked in the past 8 days
+          <p className="text-xs text-gray-700 mt-1">
+            Enter the total hours you&apos;ve worked in the past 8 days
           </p>
         </div>
       </div>
@@ -488,8 +469,8 @@ export default function OSMLocationForm({
                 <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
               )}
               {formValues.currentLocation.coordinates && (
-                <div className="absolute -bottom-5 right-0 text-xs text-green-600">
-                  ✓ Coordinates available
+                <div className="absolute -bottom-5 right-0 text-xs ">
+                  <CheckCircle className="h-5 w-5 mr-2 pt-1 text-green-700" />
                 </div>
               )}
             </div>
@@ -592,8 +573,8 @@ export default function OSMLocationForm({
             )}
             {formValues.pickupLocation.coordinates && (
               <div className="absolute -bottom-5 right-0 text-xs text-green-600">
-                ✓ Coordinates available
-              </div>
+                  <CheckCircle className="h-5 w-5 mr-2 pt-1 text-green-700" />
+                  </div>
             )}
           </div>
 
@@ -676,8 +657,8 @@ export default function OSMLocationForm({
             )}
             {formValues.dropoffLocation.coordinates && (
               <div className="absolute -bottom-5 right-0 text-xs text-green-600">
-                ✓ Coordinates available
-              </div>
+                  <CheckCircle className="h-5 w-5 mr-2 pt-1 text-green-700" />
+                  </div>
             )}
           </div>
 
@@ -716,9 +697,9 @@ export default function OSMLocationForm({
         disabled={
           isSubmitting || remainingCycleHours <= 0 || remainingDailyHours <= 0
         }
-        className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-70"
+        className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-orange-700 bg-opacity-60 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-70"
       >
-        {isSubmitting ? (
+        {isRouteData ? (
           <span className="flex items-center">
             <Loader2 className="animate-spin mr-2 h-4 w-4 text-white" />
             Submitting...
