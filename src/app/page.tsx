@@ -174,6 +174,7 @@ export default function Home() {
         alt="Background GIF"
         fill
         className="object-cover -z-10"
+        unoptimized
       />
 
       {/* Dark Overlay */}
