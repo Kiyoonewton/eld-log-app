@@ -448,7 +448,7 @@ export default function Home() {
         </AnimatePresence>
       </main>
 
-      <footer className="bg-gray-100 border-t mt-12 py-6">
+      <footer className="bg-gray-100 border-t mt-12 py-6 absolute w-full" style={{ bottom:0 }}>
         <div className="container mx-auto px-4">
           <p className="text-center text-gray-600 text-sm">
             ELD Trip Planner &copy; {new Date().getFullYear()} - Compliant with

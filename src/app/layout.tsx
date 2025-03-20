@@ -1,4 +1,5 @@
 // import { Geist, Geist_Mono } from "next/font/google";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import "./globals.css";
 import { TripProvider } from "@/context/TripContext";
 
@@ -19,8 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{background:"#fff"}}
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      <GoogleAnalytics gaId="G-J5JBCXR6J0" />
+
+      <body style={{ background: "#fff" }}
+      // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <TripProvider>{children}</TripProvider>
       </body>
